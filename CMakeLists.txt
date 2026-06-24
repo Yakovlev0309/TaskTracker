@@ -6,6 +6,7 @@ project(TaskTracker LANGUAGES CXX)
 
 set(SOURCES
     src/main.cpp
+    src/TaskManager.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})
