@@ -5,10 +5,13 @@
 #include <vector>
 
 #include "Task.hpp"
+#include "JsonTaskStorage.hpp"
 
 class TaskManager
 {
 public:
+    TaskManager();
+
     int Add(const std::string& taskMsg);
     void Update(int id, const std::string& taskMsg);
     void Delete(int id);
@@ -19,6 +22,10 @@ public:
     Task GetTaskById(int id) const;
 
 private:
+    void UpdateStorage();
+
     std::unordered_map<int, Task> tasks;
     int nextId = 1;
+
+    JsonTaskStorage storage;
 };

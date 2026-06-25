@@ -1,10 +1,19 @@
 #include "TaskManager.hpp"
 
 #include <algorithm>
+#include <stdexcept>
+
+TaskManager::TaskManager()
+{
+    tasks = storage.Load();
+}
 
 int TaskManager::Add(const std::string& taskMsg)
 {
     tasks.emplace(nextId, Task(taskMsg));
+    
+    UpdateStorage();
+
     return nextId++;
 }
 
@@ -14,6 +23,8 @@ void TaskManager::Update(int id, const std::string& taskMsg)
         throw std::out_of_range("Failed to update task title: Invalid task id.");
 
     tasks.at(id).title = taskMsg;
+
+    UpdateStorage();
 }
 
 void TaskManager::Delete(int id)
@@ -22,6 +33,8 @@ void TaskManager::Delete(int id)
         throw std::out_of_range("Failed to delete task: Invalid task id.");
 
     tasks.erase(id);
+
+    UpdateStorage();
 }
 
 void TaskManager::UpdateStatus(int id, const Task::Status& status)
@@ -30,6 +43,8 @@ void TaskManager::UpdateStatus(int id, const Task::Status& status)
         throw std::out_of_range("Failed to update task status: Invalid task id.");
 
     tasks.at(id).status = status;
+
+    UpdateStorage();
 }
 
 const std::unordered_map<int, Task>& TaskManager::GetAllTasks() const
@@ -46,7 +61,7 @@ std::vector<Task> TaskManager::GetTasksByStatus(const Task::Status& status) cons
     });
     return result;
 }
-#include <iostream>
+
 Task TaskManager::GetTaskById(int id) const
 {
     auto it = tasks.find(id);
@@ -55,4 +70,9 @@ Task TaskManager::GetTaskById(int id) const
         throw std::out_of_range("Failed to get task: Invalid task id.");
 
     return it->second;
+}
+
+void TaskManager::UpdateStorage()
+{
+    storage.Save(tasks);
 }

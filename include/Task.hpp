@@ -6,13 +6,14 @@ struct Task
 {
     enum class Status
     {
-        TODO,
+        TODO = 0,
         IN_PROGRESS,
         DONE
     };
 
-    explicit Task(const std::string& title) : title(title) {}
+    explicit Task(const std::string& title, const Status& status) : title(title), status(status) {}
+    explicit Task(const std::string& title) : Task(title, Status::TODO) {}
 
     std::string title;
-    Status status = Status::TODO;
+    Status status;
 };
