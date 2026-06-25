@@ -16,10 +16,10 @@ TEST(TaskManager, AddTest)
     const std::string taskTitle = "Buy groceries";
     taskManager.Add(taskTitle);
     
-    auto tasks = taskManager.GetAllTasks();
-    EXPECT_EQ(tasks.size(), 1);
-    EXPECT_EQ(tasks.begin()->title, taskTitle);
-    EXPECT_EQ(tasks.begin()->status, Task::Status::TODO);
+    auto task = taskManager.GetTaskById(1);
+    EXPECT_EQ(taskManager.GetAllTasks().size(), 1);
+    EXPECT_EQ(task.title, taskTitle);
+    EXPECT_EQ(task.status, Task::Status::TODO);
 }
 
 TEST(TaskManager, DeleteTest)
@@ -48,8 +48,8 @@ TEST(TaskManager, UpdateTest)
 
     taskManager.Update(1, newTaskTitle);
 
-    auto tasks = taskManager.GetAllTasks();
-    EXPECT_EQ(tasks.begin()->title, newTaskTitle);
+    auto task = taskManager.GetTaskById(1);
+    EXPECT_EQ(task.title, newTaskTitle);
 }
 
 TEST(TaskManager, UpdateStatusTest)
@@ -58,8 +58,8 @@ TEST(TaskManager, UpdateStatusTest)
     const std::string taskTitle = "Buy groceries";
     taskManager.Add(taskTitle);
     
-    const auto& tasks = taskManager.GetAllTasks();
-    EXPECT_EQ(tasks.begin()->status, Task::Status::TODO);
+    auto task = taskManager.GetTaskById(1);
+    EXPECT_EQ(task.status, Task::Status::TODO);
 
     auto newStatus = Task::Status::IN_PROGRESS;
 
@@ -68,5 +68,6 @@ TEST(TaskManager, UpdateStatusTest)
 
     taskManager.UpdateStatus(1, Task::Status::IN_PROGRESS);
 
-    EXPECT_EQ(tasks.begin()->status, newStatus);
+    task = taskManager.GetTaskById(1);
+    EXPECT_EQ(task.status, newStatus);
 }

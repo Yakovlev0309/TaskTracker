@@ -4,34 +4,35 @@
 
 void TaskManager::Add(const std::string& taskMsg)
 {
-    tasks.push_back(Task(taskMsg));
+    tasks.emplace(nextId, Task(taskMsg));
+    ++nextId;
 }
 
 void TaskManager::Update(int id, const std::string& taskMsg)
 {
-    if (id < 1 || id > tasks.size())
+    if (!tasks.contains(id))
         throw std::out_of_range("Failed to update task title: Invalid task id.");
 
-    tasks[id - 1].title = taskMsg;
+    tasks.at(id).title = taskMsg;
 }
 
 void TaskManager::Delete(int id)
 {
-    if (id < 1 || id > tasks.size())
+    if (!tasks.contains(id))
         throw std::out_of_range("Failed to delete task: Invalid task id.");
 
-    tasks.erase(tasks.begin() + id - 1);
+    tasks.erase(id);
 }
 
 void TaskManager::UpdateStatus(int id, const Task::Status& status)
 {
-    if (id < 1 || id > tasks.size())
+    if (!tasks.contains(id))
         throw std::out_of_range("Failed to update task status: Invalid task id.");
 
-    tasks[id - 1].status = status;
+    tasks.at(id).status = status;
 }
 
-const std::vector<Task>& TaskManager::GetAllTasks() const
+const std::unordered_map<int, Task>& TaskManager::GetAllTasks() const
 {
     return tasks;
 }
@@ -39,9 +40,19 @@ const std::vector<Task>& TaskManager::GetAllTasks() const
 std::vector<Task> TaskManager::GetTasksByStatus(const Task::Status& status) const
 {
     std::vector<Task> result;
-    std::for_each(tasks.begin(), tasks.end(), [&status, &result](const Task& task){
-        if (task.status == status)
-            result.push_back(task);
+    std::for_each(tasks.begin(), tasks.end(), [&status, &result](const std::pair<int, Task>& task){
+        if (task.second.status == status)
+            result.push_back(task.second);
     });
     return result;
+}
+#include <iostream>
+Task TaskManager::GetTaskById(int id) const
+{
+    auto it = tasks.find(id);
+
+    if (it == tasks.end())
+        throw std::out_of_range("Failed to get task: Invalid task id.");
+
+    return it->second;
 }
