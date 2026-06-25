@@ -9,20 +9,29 @@ void TaskManager::Add(const std::string& taskMsg)
 
 void TaskManager::Update(int id, const std::string& taskMsg)
 {
+    if (id < 1 || id > tasks.size())
+        throw std::out_of_range("Failed to update task title: Invalid task id.");
+
     tasks[id - 1].title = taskMsg;
 }
 
 void TaskManager::Delete(int id)
 {
+    if (id < 1 || id > tasks.size())
+        throw std::out_of_range("Failed to delete task: Invalid task id.");
+
     tasks.erase(tasks.begin() + id - 1);
 }
 
 void TaskManager::UpdateStatus(int id, const Task::Status& status)
 {
-    tasks[id].status = status;
+    if (id < 1 || id > tasks.size())
+        throw std::out_of_range("Failed to update task status: Invalid task id.");
+
+    tasks[id - 1].status = status;
 }
 
-std::vector<Task> TaskManager::GetAllTasks() const
+const std::vector<Task>& TaskManager::GetAllTasks() const
 {
     return tasks;
 }
