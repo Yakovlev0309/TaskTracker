@@ -2,10 +2,10 @@
 
 #include <algorithm>
 
-void TaskManager::Add(const std::string& taskMsg)
+int TaskManager::Add(const std::string& taskMsg)
 {
     tasks.emplace(nextId, Task(taskMsg));
-    ++nextId;
+    return nextId++;
 }
 
 void TaskManager::Update(int id, const std::string& taskMsg)
