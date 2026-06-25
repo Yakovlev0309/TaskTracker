@@ -51,21 +51,6 @@ void TaskManager::UpdateStatus(int id, const Task::Status& status)
     UpdateStorage();
 }
 
-const std::unordered_map<int, Task>& TaskManager::GetAllTasks() const
-{
-    return tasks;
-}
-
-std::vector<std::pair<int, Task>> TaskManager::GetTasksByStatus(const Task::Status& status) const
-{
-    std::vector<std::pair<int, Task>> result;
-    std::for_each(tasks.begin(), tasks.end(), [&status, &result](const std::pair<int, Task>& task){
-        if (task.second.status == status)
-            result.push_back(task);
-    });
-    return result;
-}
-
 Task TaskManager::GetTaskById(int id) const
 {
     auto it = tasks.find(id);

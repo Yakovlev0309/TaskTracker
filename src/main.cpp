@@ -2,16 +2,13 @@
 
 #include "TaskManager.hpp"
 
-void listTasks(const std::unordered_map<int, Task>& tasks)
+template<std::ranges::input_range Range>
+void listTasks(Range&& tasks)
 {
-    for (const auto& task : tasks)
-        std::cout << task.first << ": " << task.second.title << "\n";
-}
-
-void listTasks(const std::vector<std::pair<int, Task>>& tasks)
-{
-    for (const auto& task : tasks)
-        std::cout << task.first << ": " << task.second.title << "\n";
+    for (const auto& [id, task] : tasks)
+    {
+        std::cout << id << ": " << task.title << "\n";
+    }
 }
 
 int main(int argc, char* argv[])
@@ -30,7 +27,7 @@ int main(int argc, char* argv[])
     {
         if (argc < 3)
         {
-            std::cout << "Usage: task-cli add \"task title\"\n";
+            std::cout << "Usage: TaskTracker add \"task title\"\n";
             return 1;
         }
 
@@ -43,7 +40,7 @@ int main(int argc, char* argv[])
     {
         if (argc < 4)
         {
-            std::cout << "Usage: task-cli update N \"new title\"\n";
+            std::cout << "Usage: TaskTracker update N \"new title\"\n";
             return 1;
         }
 
@@ -56,7 +53,7 @@ int main(int argc, char* argv[])
     {
         if (argc < 3)
         {
-            std::cout << "Usage: task-cli delete N\n";
+            std::cout << "Usage: TaskTracker delete N\n";
             return 1;
         }
 
@@ -67,7 +64,7 @@ int main(int argc, char* argv[])
     {
         if (argc < 3)
         {
-            std::cout << "Usage: task-cli mark-in-progress N \"new title\"\n";
+            std::cout << "Usage: TaskTracker mark-in-progress N \"new title\"\n";
             return 1;
         }
 
@@ -78,7 +75,7 @@ int main(int argc, char* argv[])
     {
         if (argc < 3)
         {
-            std::cout << "Usage: task-cli mark-done N \"new title\"\n";
+            std::cout << "Usage: TaskTracker mark-done N \"new title\"\n";
             return 1;
         }
 
@@ -98,20 +95,13 @@ int main(int argc, char* argv[])
             std::string filter = argv[2];
 
             if (filter == "done")
-            {
-                tasks = taskManager.GetTasksByStatus(Task::Status::DONE);
-
-            }
+                listTasks(taskManager.GetTasksByStatus(Task::Status::DONE));
             else if (filter == "in-progress")
-            {
-                tasks = taskManager.GetTasksByStatus(Task::Status::IN_PROGRESS);
-            }
+                listTasks(taskManager.GetTasksByStatus(Task::Status::IN_PROGRESS));
+            else if (filter == "todo")
+                listTasks(taskManager.GetTasksByStatus(Task::Status::TODO));
             else
-            {
-                tasks = taskManager.GetTasksByStatus(Task::Status::TODO);
-            }
-
-            listTasks(tasks);
+                std::cout << "Usage: TaskTracker list todo/done/in-progress\n";
         }
     }
 

@@ -3,6 +3,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <ranges>
 
 #include "Task.hpp"
 #include "JsonTaskStorage.hpp"
@@ -17,8 +18,16 @@ public:
     void UpdateTitle(int id, const std::string& taskMsg);
     void UpdateStatus(int id, const Task::Status& status);
 
-    const std::unordered_map<int, Task>& GetAllTasks() const;
-    std::vector<std::pair<int, Task>> GetTasksByStatus(const Task::Status& status) const;
+    const std::unordered_map<int, Task>& GetAllTasks() const { return tasks; }
+    auto GetTasksByStatus(const Task::Status& status) const
+    {
+        return tasks | std::views::filter(
+            [status](const std::pair<int, Task>& item) {
+                return item.second.status == status;
+            }
+        );
+    }
+
     Task GetTaskById(int id) const;
 
 private:
