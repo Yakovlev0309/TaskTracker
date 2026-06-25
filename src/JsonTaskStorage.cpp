@@ -5,13 +5,13 @@
 #include <iterator>
 #include <regex>
 
-constexpr char* storage_file_name = "tasks_storage.json";
+constexpr const char* storage_file_name = "tasks_storage.json";
 
-void JsonTaskStorage::Save(const std::unordered_map<int, Task>& tasks)
+void JsonTaskStorage::Save(const TasksData& data)
 {
     std::ofstream file(storage_file_name);
     std::string json = "{\n\"tasks\": [\n";
-    for (auto it = tasks.begin(); it != tasks.end(); ++it)
+    for (auto it = data.tasks.begin(); it != data.tasks.end(); ++it)
     {
         json += std::format(
 R"({{
@@ -24,23 +24,21 @@ R"({{
             static_cast<int>(it->second.status)
         );
 
-        if (std::next(it) != tasks.end())
-            json += ",";
-
-        json += "\n";
+        if (std::next(it) != data.tasks.end())
+            json += ",\n";
     }
-    json += "]}\n";
+    json += "\n],\n\"next_id\": " + std::to_string(data.nextId) + "\n}\n";
 
     file << json;
 }
 
-std::unordered_map<int, Task> JsonTaskStorage::Load()
+TasksData JsonTaskStorage::Load()
 {
     std::unordered_map<int, Task> tasks;
 
     std::ifstream file(storage_file_name);
     if (!file)
-        return tasks;
+        return {tasks, -1};
 
     std::string json{std::istreambuf_iterator<char>{file}, std::istreambuf_iterator<char>{}};
 
@@ -66,5 +64,15 @@ std::unordered_map<int, Task> JsonTaskStorage::Load()
         );
     }
 
-    return tasks;
+    int nextId = -1;
+
+    std::regex nextIdRegex(
+        R"("next_id"\s*:\s*(\d+))"
+    );
+
+    std::smatch match;
+    if (std::regex_search(json, match, nextIdRegex))
+        nextId = std::stoi(match[1].str());
+
+    return TasksData{ std::move(tasks), nextId };
 }

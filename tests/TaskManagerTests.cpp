@@ -49,10 +49,10 @@ TEST(TaskManager, UpdateTest)
     const int id = taskManager.Add(taskTitle);
 
     const std::string newTaskTitle = "Buy milk and chocolate";
-    EXPECT_THROW(taskManager.Update(0, newTaskTitle), std::out_of_range);
-    EXPECT_THROW(taskManager.Update(999, newTaskTitle), std::out_of_range);
+    EXPECT_THROW(taskManager.UpdateTitle(0, newTaskTitle), std::out_of_range);
+    EXPECT_THROW(taskManager.UpdateTitle(999, newTaskTitle), std::out_of_range);
 
-    taskManager.Update(id, newTaskTitle);
+    taskManager.UpdateTitle(id, newTaskTitle);
 
     auto task = taskManager.GetTaskById(id);
     EXPECT_EQ(task.title, newTaskTitle);

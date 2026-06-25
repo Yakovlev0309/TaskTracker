@@ -1,12 +1,13 @@
 #pragma once
 
 #include "Task.hpp"
+#include "TasksData.hpp"
 
 #include <unordered_map>
 
 class TaskStorage
 {
 public:
-    virtual void Save(const std::unordered_map<int, Task>& tasks) = 0;
-    virtual std::unordered_map<int, Task> Load() = 0;
+    virtual void Save(const TasksData& data) = 0;
+    virtual TasksData Load() = 0;
 };
