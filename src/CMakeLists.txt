@@ -1,4 +1,5 @@
 add_library(tasktracker_lib
+    CommandHandler.cpp
     TaskManager.cpp
     JsonTaskStorage.cpp
 )
