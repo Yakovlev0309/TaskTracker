@@ -1,10 +1,13 @@
 #include "CommandHandler.hpp"
+#include "PrintSystem.hpp"
+
+#include <format>
 
 int CommandHandler::HandleCommand(int argc, char* argv[])
 {
     if (argc < 2)
     {
-        std::cerr << "[Error] " << "No command provided.\n";
+        Print::Error("No command provided.");
         return EXIT_FAILURE;
     }
 
@@ -27,7 +30,7 @@ int CommandHandler::HandleCommand(int argc, char* argv[])
     }
     catch (const std::exception& e)
     {
-        std::cerr << "[Error] " << e.what() << std::endl;
+        Print::Error(e.what());
         return EXIT_FAILURE;
     }
 }
@@ -40,7 +43,7 @@ int CommandHandler::Add(int argc, char* argv[])
     const std::string title = argv[2];
     const int id = taskManager.Add(title);
 
-    std::cout << "Task added successfully (ID: " << id << ")\n";
+    Print::Info(std::format("Task added successfully (ID: {})", id));
 
     return EXIT_SUCCESS;
 }
@@ -55,6 +58,8 @@ int CommandHandler::Update(int argc, char* argv[])
 
     taskManager.UpdateTitle(id, newTitle);
 
+    Print::Info(std::format("Task updated successfully (ID: {})", id));
+
     return EXIT_SUCCESS;
 }
 
@@ -66,31 +71,28 @@ int CommandHandler::Delete(int argc, char* argv[])
     const int id = std::stoi(argv[2]);
     taskManager.Delete(id);
 
+    Print::Info(std::format("Task deleted successfully (ID: {})", id));
+
     return EXIT_SUCCESS;
 }
 
 int CommandHandler::Mark(int argc, char* argv[])
 {
+    if (argc < 3)
+        throw std::runtime_error("Usage: TaskTracker mark-in-progress/mark-done N");
+
+    const int id = std::stoi(argv[2]);
+
     const std::string command = argv[1];
 
     if (command == "mark-in-progress")
-    {
-        if (argc < 3)
-            throw std::runtime_error("Usage: TaskTracker mark-in-progress N");
-
-        int id = std::stoi(argv[2]);
         taskManager.UpdateStatus(id, Task::Status::IN_PROGRESS);
-    }
     else if (command == "mark-done")
-    {
-        if (argc < 3)
-            throw std::runtime_error("Usage: TaskTracker mark-done N");
-
-        int id = std::stoi(argv[2]);
         taskManager.UpdateStatus(id, Task::Status::DONE);
-    }
     else
         throw std::runtime_error("Usage: TaskTracker mark-in-progress/mark-done N");
+
+    Print::Info(std::format("Task status changed successfully (ID: {})", id));
 
     return EXIT_SUCCESS;
 }
@@ -100,7 +102,7 @@ int CommandHandler::List(int argc, char* argv[])
     if (argc == 2)
     {
         const auto& tasks = taskManager.GetAllTasks();
-        listTasks(tasks);
+        Print::Tasks(tasks);
     }
     else
     {
@@ -108,13 +110,13 @@ int CommandHandler::List(int argc, char* argv[])
         std::string filter = argv[2];
 
         if (filter == "done")
-            listTasks(taskManager.GetTasksByStatus(Task::Status::DONE));
+            Print::Tasks(taskManager.GetTasksByStatus(Task::Status::DONE));
         else if (filter == "in-progress")
-            listTasks(taskManager.GetTasksByStatus(Task::Status::IN_PROGRESS));
+            Print::Tasks(taskManager.GetTasksByStatus(Task::Status::IN_PROGRESS));
         else if (filter == "todo")
-            listTasks(taskManager.GetTasksByStatus(Task::Status::TODO));
+            Print::Tasks(taskManager.GetTasksByStatus(Task::Status::TODO));
         else
-           throw std::runtime_error("Usage: TaskTracker list todo/done/in-progress");
+            throw std::runtime_error("Usage: TaskTracker list todo/done/in-progress");
     }
 
     return EXIT_SUCCESS;

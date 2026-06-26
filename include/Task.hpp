@@ -11,8 +11,25 @@ struct Task
         DONE
     };
 
-    explicit Task(const std::string& title, const Status& status) : title(title), status(status) {}
-    explicit Task(const std::string& title) : Task(title, Status::TODO) {}
+    explicit Task(const std::string& title, const Status& status = Status::TODO)
+        : title(title), status(status)
+    {
+    }
+
+    static constexpr std::string_view StatusToString(const Status& status)
+    {
+        switch (status)
+        {
+        case Status::TODO:
+            return "todo";
+        case Status::IN_PROGRESS:
+            return "in progress";
+        case Status::DONE:
+            return "done";
+        }
+
+        return "unknown";
+    }
 
     std::string title;
     Status status;
