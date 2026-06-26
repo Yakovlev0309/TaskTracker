@@ -1,8 +1,8 @@
 #include "TaskManager.hpp"
 #include "TasksData.hpp"
+#include "Exceptions.hpp"
 
 #include <algorithm>
-#include <stdexcept>
 
 TaskManager::TaskManager()
 {
@@ -24,7 +24,7 @@ int TaskManager::Add(const std::string& taskMsg)
 void TaskManager::Delete(int id)
 {
     if (!tasks.contains(id))
-        throw std::out_of_range("Failed to delete task: Invalid task id.");
+        throw TaskNotFoundException(id);
 
     tasks.erase(id);
 
@@ -34,7 +34,7 @@ void TaskManager::Delete(int id)
 void TaskManager::UpdateTitle(int id, const std::string& taskMsg)
 {
     if (!tasks.contains(id))
-        throw std::out_of_range("Failed to update task title: Invalid task id.");
+        throw TaskNotFoundException(id);
 
     tasks.at(id).title = taskMsg;
 
@@ -44,7 +44,7 @@ void TaskManager::UpdateTitle(int id, const std::string& taskMsg)
 void TaskManager::UpdateStatus(int id, const Task::Status& status)
 {
     if (!tasks.contains(id))
-        throw std::out_of_range("Failed to update task status: Invalid task id.");
+        throw TaskNotFoundException(id);
 
     tasks.at(id).status = status;
 
@@ -56,7 +56,7 @@ Task TaskManager::GetTaskById(int id) const
     auto it = tasks.find(id);
 
     if (it == tasks.end())
-        throw std::out_of_range("Failed to get task: Invalid task id.");
+        throw TaskNotFoundException(id);
 
     return it->second;
 }

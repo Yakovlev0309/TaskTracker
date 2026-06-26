@@ -4,6 +4,7 @@
 #include <format>
 
 #include "Task.hpp"
+#include "Exceptions.hpp"
 
 namespace Print
 {
