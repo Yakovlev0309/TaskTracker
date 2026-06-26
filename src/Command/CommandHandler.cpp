@@ -22,7 +22,7 @@ int CommandHandler::HandleCommand(int argc, char* argv[])
             return Update(argc, argv);
         else if (command == "delete")
             return Delete(argc, argv);
-        else if (command == "mark-in-progress" || command == "mark-done")
+        else if (command == "mark-todo" || command == "mark-in-progress" || command == "mark-done")
             return Mark(argc, argv);
         else if (command == "list")
             return List(argc, argv);
@@ -97,12 +97,14 @@ int CommandHandler::Mark(int argc, char* argv[])
 
     const std::string command = argv[1];
 
-    if (command == "mark-in-progress")
+    if (command == "mark-todo")
+        taskManager.UpdateStatus(id, Task::Status::TODO);
+    else if (command == "mark-in-progress")
         taskManager.UpdateStatus(id, Task::Status::IN_PROGRESS);
     else if (command == "mark-done")
         taskManager.UpdateStatus(id, Task::Status::DONE);
     else
-        throw InvalidArgumentException("Usage: TaskTracker mark-in-progress/mark-done N");
+        throw InvalidArgumentException("Usage: TaskTracker mark-todo/mark-in-progress/mark-done N");
 
     Print::Info(std::format("Task status changed successfully (ID: {})", id));
 
