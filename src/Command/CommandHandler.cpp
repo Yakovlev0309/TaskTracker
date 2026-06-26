@@ -1,6 +1,6 @@
-#include "CommandHandler.hpp"
-#include "PrintSystem.hpp"
-#include "Exceptions.hpp"
+#include "Command/CommandHandler.hpp"
+#include "print/PrintSystem.hpp"
+#include "Exception/Exceptions.hpp"
 
 #include <format>
 

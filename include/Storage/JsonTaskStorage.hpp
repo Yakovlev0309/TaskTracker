@@ -1,7 +1,7 @@
 #pragma once
 
-#include "TaskStorage.hpp"
-#include "TasksData.hpp"
+#include "Storage/TaskStorage.hpp"
+#include "Storage/TasksData.hpp"
 
 class JsonTaskStorage : public TaskStorage 
 {

@@ -1,7 +1,7 @@
 add_library(tasktracker_lib
-    CommandHandler.cpp
-    TaskManager.cpp
-    JsonTaskStorage.cpp
+    Command/CommandHandler.cpp
+    Task/TaskManager.cpp
+    Storage/JsonTaskStorage.cpp
 )
 
 target_include_directories(tasktracker_lib PUBLIC ${PROJECT_SOURCE_DIR}/include)

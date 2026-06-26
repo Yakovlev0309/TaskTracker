@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "CommandHandler.hpp"
+#include "Command/CommandHandler.hpp"
 
 int main(int argc, char* argv[])
 {

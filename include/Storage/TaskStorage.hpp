@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Task.hpp"
-#include "TasksData.hpp"
+#include "Task/Task.hpp"
+#include "Storage/TasksData.hpp"
 
 #include <unordered_map>
 

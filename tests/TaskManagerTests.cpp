@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <string>
 
-#include "TaskManager.hpp"
+#include "Task/TaskManager.hpp"
 
 TEST(TaskManager, EmptyInitTest)
 {

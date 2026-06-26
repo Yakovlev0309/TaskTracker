@@ -3,8 +3,8 @@
 #include <iostream>
 #include <format>
 
-#include "Task.hpp"
-#include "Exceptions.hpp"
+#include "Task/Task.hpp"
+#include "Exception/Exceptions.hpp"
 
 namespace Print
 {

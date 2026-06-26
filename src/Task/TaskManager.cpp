@@ -1,6 +1,6 @@
-#include "TaskManager.hpp"
-#include "TasksData.hpp"
-#include "Exceptions.hpp"
+#include "Task/TaskManager.hpp"
+#include "Storage/TasksData.hpp"
+#include "Exception/Exceptions.hpp"
 
 #include <algorithm>
 
