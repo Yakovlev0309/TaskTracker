@@ -1,8 +1,9 @@
 #include <iostream>
 
-int main()
-{
-    std::cout << "Hello, World!" << std::endl;
+#include "Command/CommandHandler.hpp"
 
-    return 0;
+int main(int argc, char* argv[])
+{
+    CommandHandler commandHandler;
+    return commandHandler.HandleCommand(argc, argv);
 }
