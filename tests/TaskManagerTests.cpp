@@ -13,14 +13,14 @@ TEST(TaskManager, EmptyInitTest)
 TEST(TaskManager, AddTest)
 {
     TaskManager taskManager;
-    const std::string taskTitle = "Buy groceries";
-    const int id = taskManager.Add(taskTitle);
+    const std::string taskDescription = "Buy groceries";
+    const int id = taskManager.Add(taskDescription);
     
     EXPECT_EQ(id, 1);
 
     auto task = taskManager.GetTaskById(id);
     EXPECT_EQ(taskManager.GetAllTasks().size(), id);
-    EXPECT_EQ(task.title, taskTitle);
+    EXPECT_EQ(task.description, taskDescription);
     EXPECT_EQ(task.status, Task::Status::TODO);
 
     const int id2 = taskManager.Add("Another task");
@@ -31,8 +31,8 @@ TEST(TaskManager, AddTest)
 TEST(TaskManager, DeleteTest)
 {
     TaskManager taskManager;
-    const std::string taskTitle = "Buy groceries";
-    const int id = taskManager.Add(taskTitle);
+    const std::string taskDescription = "Buy groceries";
+    const int id = taskManager.Add(taskDescription);
     taskManager.Delete(id);
     
     EXPECT_THROW(taskManager.Delete(0), std::out_of_range);
@@ -45,24 +45,24 @@ TEST(TaskManager, DeleteTest)
 TEST(TaskManager, UpdateTest)
 {
     TaskManager taskManager;
-    const std::string taskTitle = "Buy groceries";
-    const int id = taskManager.Add(taskTitle);
+    const std::string taskDescription = "Buy groceries";
+    const int id = taskManager.Add(taskDescription);
 
-    const std::string newTaskTitle = "Buy milk and chocolate";
-    EXPECT_THROW(taskManager.UpdateTitle(0, newTaskTitle), std::out_of_range);
-    EXPECT_THROW(taskManager.UpdateTitle(999, newTaskTitle), std::out_of_range);
+    const std::string newTaskDescription = "Buy milk and chocolate";
+    EXPECT_THROW(taskManager.UpdateDescription(0, newTaskDescription), std::out_of_range);
+    EXPECT_THROW(taskManager.UpdateDescription(999, newTaskDescription), std::out_of_range);
 
-    taskManager.UpdateTitle(id, newTaskTitle);
+    taskManager.UpdateDescription(id, newTaskDescription);
 
     auto task = taskManager.GetTaskById(id);
-    EXPECT_EQ(task.title, newTaskTitle);
+    EXPECT_EQ(task.description, newTaskDescription);
 }
 
 TEST(TaskManager, UpdateStatusTest)
 {
     TaskManager taskManager;
-    const std::string taskTitle = "Buy groceries";
-    const int id = taskManager.Add(taskTitle);
+    const std::string taskDescription = "Buy groceries";
+    const int id = taskManager.Add(taskDescription);
     
     auto task = taskManager.GetTaskById(id);
     EXPECT_EQ(task.status, Task::Status::TODO);

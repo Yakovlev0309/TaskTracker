@@ -40,7 +40,7 @@ namespace Color
         for (const auto& [id, task] : tasks)
         {
             std::cout << Color::Green << 
-                std::format("{}: \"{}\" [{}]", id, task.title, Task::StatusToString(task.status)) 
+                std::format("{}: \"{}\" [{}]", id, task.description, Task::StatusToString(task.status)) 
                 << Color::Reset << std::endl;
         }
     }

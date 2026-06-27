@@ -11,8 +11,8 @@ struct Task
         DONE
     };
 
-    explicit Task(const std::string& title, const Status& status = Status::TODO)
-        : title(title), status(status)
+    explicit Task(const std::string& description, const Status& status = Status::TODO)
+        : description(description), status(status)
     {
     }
 
@@ -31,6 +31,6 @@ struct Task
         return "unknown";
     }
 
-    std::string title;
+    std::string description;
     Status status;
 };

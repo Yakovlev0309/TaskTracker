@@ -49,10 +49,10 @@ int CommandHandler::HandleCommand(int argc, char* argv[])
 int CommandHandler::Add(int argc, char* argv[])
 {
     if (argc < 3)
-        throw InvalidArgumentException("Usage: TaskTracker add \"task title\"");
+        throw InvalidArgumentException("Usage: TaskTracker add \"task description\"");
 
-    const std::string title = argv[2];
-    const int id = taskManager.Add(title);
+    const std::string description = argv[2];
+    const int id = taskManager.Add(description);
 
     Print::Info(std::format("Task added successfully (ID: {})", id));
 
@@ -62,12 +62,12 @@ int CommandHandler::Add(int argc, char* argv[])
 int CommandHandler::Update(int argc, char* argv[])
 {
     if (argc < 4)
-        throw InvalidArgumentException("Usage: TaskTracker update N \"new title\"");
+        throw InvalidArgumentException("Usage: TaskTracker update N \"new description\"");
 
     const int id = std::stoi(argv[2]);
-    const std::string newTitle = argv[3];
+    const std::string newDescription = argv[3];
 
-    taskManager.UpdateTitle(id, newTitle);
+    taskManager.UpdateDescription(id, newDescription);
 
     Print::Info(std::format("Task updated successfully (ID: {})", id));
 
@@ -80,10 +80,10 @@ int CommandHandler::Delete(int argc, char* argv[])
         throw InvalidArgumentException("Usage: TaskTracker delete N");
 
     const int id = std::stoi(argv[2]);
-    const std::string taskTitle = taskManager.GetTaskById(id).title;
+    const std::string taskDescription = taskManager.GetTaskById(id).description;
     taskManager.Delete(id);
 
-    Print::Info(std::format("Task deleted successfully ({}: \"{}\")", id, taskTitle));
+    Print::Info(std::format("Task deleted successfully ({}: \"{}\")", id, taskDescription));
 
     return EXIT_SUCCESS;
 }

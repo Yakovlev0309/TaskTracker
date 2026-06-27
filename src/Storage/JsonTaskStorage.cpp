@@ -16,11 +16,11 @@ void JsonTaskStorage::Save(const TasksData& data)
         json += std::format(
 R"({{
     "id": {},
-    "title": "{}",
+    "description": "{}",
     "status": {}
 }})",
             it->first,
-            it->second.title,
+            it->second.description,
             static_cast<int>(it->second.status)
         );
 
@@ -43,7 +43,7 @@ TasksData JsonTaskStorage::Load()
     std::string json{std::istreambuf_iterator<char>{file}, std::istreambuf_iterator<char>{}};
 
     std::regex taskRegex(
-        R"(\{\s*\"id\"\s*:\s*(\d+)\s*,\s*\"title\"\s*:\s*\"([^\"]*)\"\s*,\s*\"status\"\s*:\s*(\d+)\s*\})"
+        R"(\{\s*\"id\"\s*:\s*(\d+)\s*,\s*\"description\"\s*:\s*\"([^\"]*)\"\s*,\s*\"status\"\s*:\s*(\d+)\s*\})"
     );
 
     auto begin = std::sregex_iterator(json.begin(), json.end(), taskRegex);
@@ -52,13 +52,13 @@ TasksData JsonTaskStorage::Load()
     for (auto it = begin; it != end; ++it)
     {
         int id = std::stoi((*it)[1].str());
-        std::string title = (*it)[2].str();
+        std::string description = (*it)[2].str();
         int status = std::stoi((*it)[3].str());
 
         tasks.emplace(
             id,
             Task {
-                title,
+                description,
                 static_cast<Task::Status>(status)
             }
         );

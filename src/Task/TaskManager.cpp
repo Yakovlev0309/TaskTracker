@@ -31,12 +31,12 @@ void TaskManager::Delete(int id)
     UpdateStorage();
 }
 
-void TaskManager::UpdateTitle(int id, const std::string& taskMsg)
+void TaskManager::UpdateDescription(int id, const std::string& taskMsg)
 {
     if (!tasks.contains(id))
         throw TaskNotFoundException(id);
 
-    tasks.at(id).title = taskMsg;
+    tasks.at(id).description = taskMsg;
 
     UpdateStorage();
 }

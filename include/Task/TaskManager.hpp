@@ -15,7 +15,7 @@ public:
 
     int Add(const std::string& taskMsg);
     void Delete(int id);
-    void UpdateTitle(int id, const std::string& taskMsg);
+    void UpdateDescription(int id, const std::string& taskMsg);
     void UpdateStatus(int id, const Task::Status& status);
 
     const std::unordered_map<int, Task>& GetAllTasks() const { return tasks; }
