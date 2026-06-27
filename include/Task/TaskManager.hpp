@@ -28,8 +28,8 @@ public:
         );
     }
 
-    Task GetTaskById(int id) const;
-
+    Task& GetTaskById(int id);
+    
 private:
     void UpdateStorage();
 

@@ -14,15 +14,19 @@ void JsonTaskStorage::Save(const TasksData& data)
     for (auto it = data.tasks.begin(); it != data.tasks.end(); ++it)
     {
         json += std::format(
-R"({{
+            R"({{
     "id": {},
     "description": "{}",
-    "status": {}
+    "status": {},
+    "createdAt": {},
+    "updatedAt": {}
 }})",
-            it->first,
-            it->second.description,
-            static_cast<int>(it->second.status)
-        );
+it->first,
+it->second.description,
+static_cast<int>(it->second.status),
+std::chrono::system_clock::to_time_t(it->second.createdAt),
+std::chrono::system_clock::to_time_t(it->second.updatedAt)
+);
 
         if (std::next(it) != data.tasks.end())
             json += ",\n";
@@ -38,30 +42,37 @@ TasksData JsonTaskStorage::Load()
 
     std::ifstream file(storage_file_name);
     if (!file)
-        return {tasks, -1};
+        return { tasks, -1 };
 
-    std::string json{std::istreambuf_iterator<char>{file}, std::istreambuf_iterator<char>{}};
+    std::string json{ std::istreambuf_iterator<char>{file}, std::istreambuf_iterator<char>{} };
 
     std::regex taskRegex(
-        R"(\{\s*\"id\"\s*:\s*(\d+)\s*,\s*\"description\"\s*:\s*\"([^\"]*)\"\s*,\s*\"status\"\s*:\s*(\d+)\s*\})"
+        R"(\{\s*\"id\"\s*:\s*(\d+)\s*,\s*\"description\"\s*:\s*\"([^\"]*)\"\s*,\s*\"status\"\s*:\s*(\d+)\s*,\s*\"createdAt"\s*:\s*(\d+)\s*,\s*\"updatedAt"\s*:\s*(\d+)\s*})"
     );
+    
+    // std::regex taskRegex(
+    //     R"(\{\s*\"id\"\s*:\s*(\d+)\s*,\s*\"description\"\s*:\s*\"([^\"]*)\"\s*,\s*\"status\"\s*:\s*(\d+)\s*\})"
+    // );
 
     auto begin = std::sregex_iterator(json.begin(), json.end(), taskRegex);
     auto end = std::sregex_iterator();
 
     for (auto it = begin; it != end; ++it)
     {
-        int id = std::stoi((*it)[1].str());
-        std::string description = (*it)[2].str();
-        int status = std::stoi((*it)[3].str());
+        const int id = std::stoi((*it)[1].str());
+        const std::string description = (*it)[2].str();
+        const int status = std::stoi((*it)[3].str());
+        const std::time_t createdAt = std::stoi((*it)[4].str());
+        const std::time_t updatedAt = std::stoi((*it)[5].str());
 
-        tasks.emplace(
-            id,
-            Task {
-                description,
-                static_cast<Task::Status>(status)
-            }
-        );
+        Task task{
+            description,
+            static_cast<Task::Status>(status)
+        };
+        task.createdAt = std::chrono::system_clock::from_time_t(createdAt);
+        task.updatedAt = std::chrono::system_clock::from_time_t(updatedAt);
+
+        tasks.emplace(id, task);
     }
 
     int nextId = -1;

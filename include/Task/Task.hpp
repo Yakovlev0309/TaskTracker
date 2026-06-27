@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <chrono>
 
 struct Task
 {
@@ -33,4 +34,6 @@ struct Task
 
     std::string description;
     Status status;
+    std::chrono::system_clock::time_point createdAt;
+    std::chrono::system_clock::time_point updatedAt;
 };

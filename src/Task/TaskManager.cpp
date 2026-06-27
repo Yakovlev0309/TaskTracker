@@ -15,6 +15,10 @@ int TaskManager::Add(const std::string& taskMsg)
 {
     tasks.emplace(nextId, Task(taskMsg));
     
+    Task& task = GetTaskById(nextId);
+    task.createdAt = std::chrono::system_clock::now();
+    task.updatedAt = task.createdAt;
+
     ++nextId;
     UpdateStorage();
 
@@ -33,25 +37,25 @@ void TaskManager::Delete(int id)
 
 void TaskManager::UpdateDescription(int id, const std::string& taskMsg)
 {
-    if (!tasks.contains(id))
-        throw TaskNotFoundException(id);
+    Task& task = GetTaskById(id);
 
-    tasks.at(id).description = taskMsg;
+    task.description = taskMsg;
+    task.updatedAt = std::chrono::system_clock::now();
 
     UpdateStorage();
 }
 
 void TaskManager::UpdateStatus(int id, const Task::Status& status)
 {
-    if (!tasks.contains(id))
-        throw TaskNotFoundException(id);
+    Task& task = GetTaskById(id);
 
-    tasks.at(id).status = status;
+    task.status = status;
+    task.updatedAt = std::chrono::system_clock::now();
 
     UpdateStorage();
 }
 
-Task TaskManager::GetTaskById(int id) const
+Task& TaskManager::GetTaskById(int id)
 {
     auto it = tasks.find(id);
 
